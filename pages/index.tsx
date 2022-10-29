@@ -1,86 +1,155 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { HiCheckBadge } from 'react-icons/hi2';
+import { MdLocationOn } from 'react-icons/md';
+import logo from '../assets/logo.png';
+import { useState } from 'react';
+import Image from 'next/image';
+import toast, { Toaster } from 'react-hot-toast';
+import Router from 'next/router';
+
+const notify = () =>
+  toast('This username does not exist', {
+    icon: '🥴',
+    ariaProps: {
+      role: 'status',
+      'aria-live': 'polite',
+    },
+  });
 
 const Home: NextPage = () => {
+  const [datas, setdDatas] = useState('');
+  const [userName, setuserName] = useState('');
+
+  const viewImage = () => {
+    Router.push({
+      pathname: `/profile/${userName}}`,
+      query: {
+        img: datas.srcTxt,
+      },
+    });
+  };
+
+  const fetchProfile = async (e: any) => {
+    e.preventDefault();
+    const response = await fetch('/api/hello', {
+      method: 'POST',
+      body: JSON.stringify({ userName }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (!(response.status === 200)) {
+      return notify();
+    }
+    const { src } = await response.json();
+    console.log(src);
+    setdDatas(src);
+  };
+
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
+    <div
+      className="flex items-center justify-center h-screen
+    bg-gradient-to-b from-[#6646ff] to-[#ba68ed]
+    "
+    >
       <Head>
-        <title>Create Next App</title>
+        <title>Zepeto Me</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
-        <h1 className="text-6xl font-bold">
-          Welcome to{' '}
-          <a className="text-blue-600" href="https://nextjs.org">
-            Next.js!
-          </a>
-        </h1>
-
-        <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
-        </p>
-
-        <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
-          <a
-            href="https://nextjs.org/docs"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and its API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Learn &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Learn about Next.js in an interactive course with quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/canary/examples"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Examples &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Discover and deploy boilerplate example Next.js projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className="mt-6 w-96 rounded-xl border p-6 text-left hover:text-blue-600 focus:text-blue-600"
-          >
-            <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
-            <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+      {!datas && (
+        <div className="flex flex-col items-center">
+          <Image src={logo} alt="" className="h-72 w-72 object-contain" />
+          <form onSubmit={fetchProfile}>
+            <input
+              type="text"
+              placeholder="seacrh user"
+              value={userName}
+              onChange={(e) => setuserName(e.target.value)}
+              className="bg-gray-50 text-sm border-none outline-none shadow-md px-4 py-2 rounded-md"
+            />
+            <button type="submit" hidden>
+              Search
+            </button>
+          </form>
         </div>
-      </main>
+      )}
 
-      <footer className="flex h-24 w-full items-center justify-center border-t">
-        <a
-          className="flex items-center justify-center gap-2"
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-        </a>
-      </footer>
+      {/* <img src={datas} alt="" className="h-96 w-96 m-10" /> */}
+      {datas && (
+        <div className="relative max-w-md mx-auto md:max-w-2xl min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-xl mt-16">
+          <div className="px-6">
+            <div className="flex flex-wrap justify-center">
+              <div className="w-full flex justify-center">
+                <div className="relative">
+                  <img
+                    src={datas.srcTxt}
+                    className="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]"
+                  />
+                </div>
+              </div>
+              <div className="w-full text-center mt-20">
+                <div className="flex justify-center lg:pt-4 pt-8 pb-0">
+                  <div className="p-3 text-center">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                      {datas.postTxt}
+                    </span>
+                    <span className="text-sm text-slate-400">Posts</span>
+                  </div>
+                  <div className="p-3 text-center">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                      {datas.follworsTxt}
+                    </span>
+                    <span className="text-sm text-slate-400">Followers</span>
+                  </div>
+
+                  <div className="p-3 text-center">
+                    <span className="text-xl font-bold block uppercase tracking-wide text-slate-700">
+                      {datas.follwingTxt}
+                    </span>
+                    <span className="text-sm text-slate-400">Following</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="text-center mt-2">
+              <h3 className="flex items-center justify-center text-2xl text-slate-700 font-bold leading-normal mb-1">
+                {datas.titleTxt}
+                <span>
+                  <HiCheckBadge className="ml-2 h-6 text-blue-600" />
+                </span>
+              </h3>
+              <div className="text-xs mt-0 mb-2 text-slate-400 font-bold uppercase">
+                <i className="fas fa-map-marker-alt mr-2 text-slate-400 opacity-75"></i>
+                <div className="flex items-center justify-center">
+                  <MdLocationOn className="mr-2 text-gray-500" />{' '}
+                  {datas.locationTxt}
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 py-6 border-t border-slate-200 text-center">
+              <div className="flex flex-wrap justify-center">
+                <div className="w-full px-4">
+                  <p className="font-light leading-relaxed text-slate-600 mb-4">
+                    {datas.bioTxt}
+                  </p>
+                </div>
+                <button
+                  className=" bg-gradient-to-b from-[#6646ff] to-[#ba68ed] px-4 py-3 rounded-full text-white text-sm shadow-md hover:shadow-xl"
+                  onClick={viewImage}
+                >
+                  View Profile
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <Toaster />
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
