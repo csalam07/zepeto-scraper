@@ -7,7 +7,7 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   if (req.method === 'GET') {
-    res.status(200).json({ msg: req.body });
+    res.status(200).json({ msg: 'Hello' });
   } else if (req.method === 'POST') {
     const url = `https://user.zepeto.me/${req.body.userName}?language=en`;
     const browser = await puppeteer.launch();
