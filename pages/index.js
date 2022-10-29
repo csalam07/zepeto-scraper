@@ -1,4 +1,3 @@
-import type { NextPage } from 'next';
 import Head from 'next/head';
 import { HiCheckBadge } from 'react-icons/hi2';
 import { MdLocationOn } from 'react-icons/md';
@@ -17,7 +16,7 @@ const notify = () =>
     },
   });
 
-const Home: NextPage = () => {
+const Home = () => {
   const [datas, setdDatas] = useState('');
   const [userName, setuserName] = useState('');
 
@@ -30,7 +29,7 @@ const Home: NextPage = () => {
     });
   };
 
-  const fetchProfile = async (e: any) => {
+  const fetchProfile = async (e) => {
     e.preventDefault();
     const response = await fetch('/api/hello', {
       method: 'POST',
