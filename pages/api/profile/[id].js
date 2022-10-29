@@ -1,15 +1,9 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next';
 import puppeteer from 'puppeteer';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse,
-) {
+export default async function handler(req, res) {
+  const { id } = req.query;
   if (req.method === 'GET') {
-    res.status(200).json({ msg: 'Hello' });
-  } else if (req.method === 'POST') {
-    const url = `https://user.zepeto.me/${req.body.id}?language=en`;
+    const url = `https://user.zepeto.me/${id}?language=en`;
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url);
@@ -76,6 +70,7 @@ export default async function handler(
       locationTxt,
     };
     // console.log(result);
+    await browser.close();
     res.status(200).json({ src: result });
   }
 }

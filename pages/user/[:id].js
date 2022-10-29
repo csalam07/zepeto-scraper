@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { HiCheckBadge } from 'react-icons/hi2';
 import { MdLocationOn } from 'react-icons/md';
 import Router from 'next/router';
@@ -104,16 +103,9 @@ function User({ src, id, errorCode }) {
 export default User;
 export async function getServerSideProps(context) {
   const { query } = context;
-
   const { id } = query;
   const url = process.env.NEXT_PUBLIC_URL;
-  const res = await fetch(`${url}/api/hello`, {
-    method: 'POST',
-    body: JSON.stringify({ id }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  const res = await fetch(`${url}/api/profile/${id}`);
   const errorCode = res.ok ? false : res.status;
   const { src } = await res.json();
   return {
