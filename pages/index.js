@@ -31,7 +31,7 @@ const Home = () => {
 
   const fetchProfile = async (e) => {
     e.preventDefault();
-    const response = await fetch('https://zepeto-me.vercel.app/api/hello', {
+    const response = await fetch('/api/hello', {
       method: 'POST',
       body: JSON.stringify({ userName }),
       headers: {
