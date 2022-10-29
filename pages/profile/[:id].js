@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { saveAs } from 'file-saver';
 
-function Profile() {
+function ProfilePic() {
   const router = useRouter();
   const {
     query: { img },
@@ -29,4 +29,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default ProfilePic;

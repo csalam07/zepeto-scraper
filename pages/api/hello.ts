@@ -9,11 +9,13 @@ export default async function handler(
   if (req.method === 'GET') {
     res.status(200).json({ msg: 'Hello' });
   } else if (req.method === 'POST') {
-    const url = `https://user.zepeto.me/${req.body.userName}?language=en`;
+    const url = `https://user.zepeto.me/${req.body.id}?language=en`;
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.goto(url);
 
+    if (!page)
+      return res.status(400).json({ src: "This username doesn't exist " });
     // profile image
     const [el] = await page.$x('/html/body/div/div/div[2]/section[1]/div/img');
     const src = await el.getProperty('src');
@@ -27,11 +29,16 @@ export default async function handler(
     const titleTxt = await title.jsonValue();
 
     // location
+    let locationTxt;
     const [el3] = await page.$x(
       '/html/body/div/div/div[2]/section[1]/div/div/div[2]/p[2]',
     );
-    const location = await el3.getProperty('textContent');
-    const locationTxt = await location.jsonValue();
+    if (!el3) {
+      locationTxt = 'NA';
+    } else {
+      const location = await el3.getProperty('textContent');
+      locationTxt = await location.jsonValue();
+    }
 
     // post
     const [el4] = await page.$x(
@@ -68,7 +75,7 @@ export default async function handler(
       follworsTxt,
       locationTxt,
     };
-    console.log(result);
+    // console.log(result);
     res.status(200).json({ src: result });
   }
 }
