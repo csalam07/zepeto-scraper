@@ -106,8 +106,8 @@ export async function getServerSideProps(context) {
   const { query } = context;
 
   const { id } = query;
-  const url = context.req.headers.host;
-  const res = await fetch(`https://${url}/api/hello`, {
+  // const url = context.req.headers.host;
+  const res = await fetch(`https://zepeto-me.vercel.app/api/hello`, {
     method: 'POST',
     body: JSON.stringify({ id }),
     headers: {
